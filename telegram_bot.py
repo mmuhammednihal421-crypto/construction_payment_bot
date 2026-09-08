@@ -19,8 +19,30 @@ supabase = create_client(url, key)
 # Telegram bot token
 telegram_token = os.getenv("TELEGRAM_BOT_TOKEN")
 
+# Authorized Telegram users
+ALLOWED_USER_IDS = {
+    1317894846,   # Your Telegram ID
+    5270973018,   # Mom's Telegram ID
+}
+
+
+
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    # Check whether the user is authorized
+    user = update.effective_user
+
+    if user is None or user.id not in ALLOWED_USER_IDS:
+        await update.message.reply_text(
+            "❌ You are not authorized to use this bot."
+        )
+        return
+
+    message = update.message.text.strip()
+
+    # Split message
+    parts = message.split()
 
     message = update.message.text.strip()
 
